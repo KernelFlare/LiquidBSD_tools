@@ -74,7 +74,7 @@ setup(void){
         printf("\b\bCAFERC %s ON %s \n",ver,buffer.sysname);
     }
     else printf("CafeRC %s on %s, Checking for [RC] at [%s]\n",ver, buffer.sysname,RCpath);
-    if (buffer.sysname == "LikuidBSD") {
+    if (buffer.sysname == "LiquidBSD") {
         printf("CafeRC:I\'M HOME??? ALREADY??? IN BIG")
         system("/bin/date");
         printf("????\n");
