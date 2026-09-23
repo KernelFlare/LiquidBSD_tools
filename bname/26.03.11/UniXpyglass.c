@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/sysinfo.h>
+#include <sys/utsname.h>
+#include <string.h>
+//#define COLOR "\033[48;2;R;G;B"
+#define BK "\x1B[38;02;02;02;02;48;2;22;22;22m"
+#define RD "\x1B[31m"
+#define GN "\x1B[32m"
+#define YL "\x1B[33m"
+#define BL "\x1B[34m"
+#define MG "\x1B[35m"
+#define CY "\x1B[36m"
+#define WH "\x1B[40;37m"
+#define NO "\x1B[0m" 
+#define DGR "\033[48;2;22;22;22;38;2;36;36;36m"
+#define GR "\033[48;2;22;22;22;38;2;63;63;63m"
+#define FLAME "\033[48;2;133;0;0;38;2;43;0;0m"
+#define MENU "\033[48;2;130;0;0;38;2;222;222;222m"
+#define ERRcol "\033[48;2;190;0;0;38;2;0;0;0m"
+#define CLEAR "\033[2J\033[1;1H"
+//# UniXpyglass (shell and system info)
+//# Most of terminals interpreter custom colors as blue or another colors
+//#
+int main() {
+//# structs
+    struct utsname buffer;
+    struct sysinfo sysi;
+//# cpu
+    long cores = sysconf(_SC_NPROCESSORS_ONLN); 
+    FILE *fp = fopen("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq", "r");
+    unsigned int max_freq_khz;
+    fscanf(fp, "%u", &max_freq_khz);
+//# ram
+    sysinfo(&sysi);
+    long long total_ram_mb = (long long)sysi.totalram * sysi.mem_unit / (1024 * 1024);
+    uname(&buffer);
+//# misc
+    char *ver = "1.0" ;
+    char *user = getenv("USER");
+    char x = 'x';
+    int num = strlen(user) + 2 ;
+    char* str = (char*)malloc(num + 3);
+    memset(str, x, num); 
+    str[num] = '\0';
+    char path[60], shell[20];
+    sprintf(path, "/proc/%d/comm", getppid());
+    FILE *f = fopen(path, "r");
+    fgets(shell, sizeof(shell), f);
+//# show info
+    printf("%s....._=XYYYX=_.....%s X %s\n",GR,NO, user);
+    printf("%s._X&$$$$$$$$$$$&X_.%s X%s \n",GR,NO, str);
+    printf("%s&############%s--%s###&%s X Kernel - %s\n",DGR,FLAME,DGR,NO, buffer.sysname);
+    printf("%s@#@#@#%s=++%s##%s++-%s#@#@#%s X Release - %s\n",DGR,FLAME,DGR,FLAME,DGR,NO, buffer.release);
+    printf("%s@@#@%sEX=%s@#@@%s+++%s#@@#@%s X Machine - %s\n",BK,FLAME,BK,FLAME,BK,NO, buffer.machine);
+    printf("%s@@@@%s@@EEEXx==+%s@@@@@%s X Nodename - %s\n",BK,FLAME,BK,NO, buffer.nodename);
+    printf("%sX%s@@@@%s@@@@EEX%s@@@@@@%sX%s X Version - %s\n",FLAME,BK,FLAME,BK,FLAME,NO, buffer.version);
+    printf("%s=xX&%s@@@@@@@@@@@%s&Xx=%s X Shell - %s",FLAME,BK,FLAME,NO,shell);
+    printf("%s...%s-=xX&@@@&Xx=-%s...%s X Total freq * cores - %.2f MHZ * %ld CORES\n",BK,FLAME,BK,NO,max_freq_khz / 1000.0, cores);
+    printf("                    X Total Ram Vol - %lld MB\n", total_ram_mb);
+    printf("%sX%sX%sX%sX%sX%sX%sX%sX%sX%sX%sX%sX%sX%sX      X\n",BK,DGR,GR,WH,RD,YL,GN,CY,BL,MG,FLAME,ERRcol,MENU,NO);
+    fclose(f);free(str);return 0 ;}
