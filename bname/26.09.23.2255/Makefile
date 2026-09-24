@@ -1,12 +1,13 @@
-CC = cc
-CFLAGS = -static -Wall
-TARGET = bname
-SRC = bname.c
+CC         ?= cc
+CFLAGS     ?= -Wall -O2
+LDFLAGS    = -static
+TARGET     = bname
+SRC        = bname.c
 
 all: $(TARGET)
 
 $(TARGET): $(SRC)
-	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(SRC) -o $(TARGET)
 
 clean:
 	rm -f $(TARGET)
